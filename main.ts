@@ -1,9 +1,9 @@
-//% weight=100 color=#6699CC icon="\uf140" block="Cubicbird-Dungeon"
+//% weight=99 color="#6d5ba5" icon="\uf004"
 //% groups='["Game", "Skill"]'
 namespace cbdungeon {
     let sprite :Sprite = null;
 
-    // %blocka
+    // %block
     export function throwWaterBallRight() {
         sprites.createProjectileFromSprite(img`
             . . . . . . . . . . . . . . . .

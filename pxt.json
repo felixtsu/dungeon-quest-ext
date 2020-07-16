@@ -3,7 +3,7 @@
     "dependencies": {
         "device": "*"
     },
-    "description": "",
+    "description": "a simple dungeon quert extension",
     "files": [
         "main.blocks",
         "main.ts",
