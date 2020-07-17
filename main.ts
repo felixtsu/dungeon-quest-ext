@@ -165,6 +165,13 @@ namespace dungeon {
         `, SpriteKind.Door)
         tiles.placeOnTile(doorSprite, tiles.getTileLocation(13, 12))
 
+        preparePlayer()
+    }
+
+
+    //%block 
+    //%group="Game"
+    export function dropKey() {
         let keySprite = sprites.create(img`
             . . . . . . . . . . . . . . . .
             . . . . . . . . . . . . . . . .
@@ -184,8 +191,6 @@ namespace dungeon {
             . . . . . . . . . . . . . . . .
         `, SpriteKind.Key)
         tiles.placeOnTile(keySprite, tiles.getTileLocation(12, 14))
-
-        preparePlayer()
     }
 
     function preparePlayer() {
