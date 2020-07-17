@@ -1,9 +1,11 @@
 //% weight=99 color="#6d5ba5" icon="\uf004"
 //%groups='["Skill", "Game"]'
 namespace dungeon {
+
     let playerSprite: Sprite = null
     const SPRITE_KIND_WATER_BALL = SpriteKind.create()
     const SPRITE_KIND_PLAYER = SpriteKind.create()
+    const SPRITE_KIND_PORTAL = SpriteKind.create()
 
     //%block
     //%group="Skill"
@@ -161,6 +163,30 @@ namespace dungeon {
     //%group="Skill"
     export function openDoor() {
         tiles.setTileAt(tiles.getTileLocation(13, 12), myTiles.tile2)
+        let portalSprite = sprites.create(img`
+            . . . . . . . . . . . . . . . .
+            . . . . . . . 1 1 . . . . . . .
+            . . . . . . 1 7 7 1 . . . . . .
+            . . . . . 1 7 6 6 7 1 . . . . .
+            . . . . 1 7 6 6 6 6 7 1 . . . .
+            . . . 6 6 6 6 f f 6 6 7 6 . . .
+            . . . . 7 6 f f f f 6 7 . . . .
+            . . . 6 6 6 f f f f 6 6 . . . .
+            . . . 6 7 6 f f f f 6 6 . . . .
+            . . . . 6 6 f f f f 6 6 . . . .
+            . . . 6 6 6 6 f f 6 6 7 6 . . .
+            . . 6 . 7 7 6 6 6 6 6 6 . . . .
+            . . . . . 6 7 6 6 7 7 . . . . .
+            . . . . . . 6 6 7 6 . . . . . .
+            . . . . . . 6 7 7 6 6 . . . . .
+            . . . . . . . . . . . . . . . .
+        `, SPRITE_KIND_PORTAL)
+        tiles.placeOnTile(portalSprite, tiles.getTileLocation(13,11))
+
+        sprites.onOverlap(SPRITE_KIND_PLAYER, SPRITE_KIND_PORTAL, (sprite, otherSprite) => {
+            tiles.placeOnTile(sprite, tiles.getTileLocation(7,8))
+            otherSprite.destroy()
+        })
     }
 
 
