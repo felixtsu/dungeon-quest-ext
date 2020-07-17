@@ -7,6 +7,7 @@ namespace dungeon {
     const SPRITE_KIND_PORTAL = SpriteKind.create()
     const SPRITE_KIND_WATER_FOUNTAIN = SpriteKind.create()
     const SPRITE_KIND_OPEN_DOOR = SpriteKind.create()
+    const SPRITE_KIND_TRAP = SpriteKind.create()
 
     export enum WaterballDirection {
         UP, DOWN, RIGHT, LEFT
@@ -166,6 +167,7 @@ namespace dungeon {
         tiles.placeOnTile(doorSprite, tiles.getTileLocation(13, 12))
 
         preparePlayer()
+        prepareTrap()
     }
 
 
@@ -191,6 +193,34 @@ namespace dungeon {
             . . . . . . . . . . . . . . . .
         `, SpriteKind.Key)
         tiles.placeOnTile(keySprite, tiles.getTileLocation(12, 14))
+    }
+
+    let trapSprite :Sprite = null
+    function prepareTrap() {
+        trapSprite = sprites.create(img`
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+        `, SPRITE_KIND_TRAP)
+        tiles.placeOnTile(trapSprite,tiles.getTileLocation(13, 11))
+
+        sprites.onOverlap(SpriteKind.Player, SPRITE_KIND_TRAP, function (sprite: Sprite, otherSprite: Sprite) {
+            game.splash("你作弊破门被发现，即死")
+            game.over()
+        })
     }
 
     function preparePlayer() {
@@ -314,6 +344,7 @@ namespace dungeon {
         }
 
         doorSprite.destroy()
+        trapSprite.destroy()
 
         tiles.setTileAt(tiles.getTileLocation(13, 12), myTiles.tile2)
 
