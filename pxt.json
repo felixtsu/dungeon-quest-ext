@@ -1,7 +1,8 @@
 {
     "name": "dungeon-quest-ext",
     "dependencies": {
-        "device": "*"
+        "device": "*",
+        "pxt-status-bar": "github:jwunderl/pxt-status-bar#v0.2.9"
     },
     "description": "a simple dungeon quert extension",
     "files": [
