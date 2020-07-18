@@ -21,7 +21,7 @@ namespace dungeon {
     //%group="Skill"
     export function throwWaterBall(direction: WaterballDirection) {
         if (moving) {
-            playerSprite.say("我要站着不动才能发射水球")
+            playerSprite.say("我要站着不动才能发射水球", 1000)
             return
         }
         let powerBarSprite = statusbars.getStatusBarAttachedTo(StatusBarKind.Energy, playerSprite)
