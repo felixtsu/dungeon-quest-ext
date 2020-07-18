@@ -14,18 +14,20 @@ namespace dungeon {
     }
 
 
+
+    let moving = false;
+
     //%block
     //%group="Skill"
     export function throwWaterBall(direction: WaterballDirection) {
-        if (controller.up.isPressed() || controller.down.isPressed() ||
-            controller.left.isPressed() || controller.right.isPressed()) {
+        if (moving) {
             playerSprite.say("我要站着不动才能发射水球")
             return
         }
         let powerBarSprite = statusbars.getStatusBarAttachedTo(StatusBarKind.Energy, playerSprite)
 
         if (powerBarSprite === undefined || powerBarSprite.value != powerBarSprite.max) {
-            playerSprite.say("Not enought energy.", 1000)
+            playerSprite.say("Not enough energy.", 1000)
             return;
         }
 
@@ -376,6 +378,8 @@ namespace dungeon {
     }
 
 
+
+
     function prepareLevel2() {
         let glowingTorches = 4
         scene.onHitWall(SPRITE_KIND_WATER_BALL, function (sprite: Sprite) {
@@ -404,6 +408,16 @@ namespace dungeon {
         game.onUpdate(function () {
             if (glowingTorches == 0) {
                 game.over(true)
+            }
+        })
+
+        let lastMovingTimeStamp = game.runtime()
+        game.onUpdate(function () {
+            if (playerSprite.vx != 0 || playerSprite.vy != 0) {
+                moving = true;
+                lastMovingTimeStamp = game.runtime()
+            } else if (game.runtime() - lastMovingTimeStamp > 1000){
+                moving = false
             }
         })
     }
