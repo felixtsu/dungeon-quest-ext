@@ -13,6 +13,30 @@ namespace dungeon {
         UP, DOWN, RIGHT, LEFT
     }
 
+    export enum Recipe {
+        TomatoRice, FriedRice, TomatoEgg
+    }
+
+    //%block
+    //%group="Skill"
+    export function cook(recipe: Recipe) {
+        if (!playerSprite.tileKindAt(TileDirection.Center, myTiles.tile2)) {
+            playerSprite.say('我要在火堆上才能做饭', 1000)
+            return
+        }
+
+        if (ingredientsAcquired != 2 || recipe != correctRecipe) {
+            playerSprite.say("你身上的原料做不出来这个菜，你饿死了", 1000)
+            pause(1000)
+            game.over()
+        } else {
+            playerSprite.say("饱餐一顿的勇者第二天就找到了出路", 2000)
+            pause(2000)
+            game.over(true)
+        }
+    }
+
+    let ingredientsAcquired = 0
 
 
     let moving = false;
@@ -121,15 +145,14 @@ namespace dungeon {
     //%block
     //%group="Game"
     export function prepareDungeon() {
-
         tiles.setTilemap(tiles.createTilemap(
-            hex`10001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001090200000000000000000000000000071105000000000000000000000001060d110c06020000000000000000001011111111110e00000000000000000003080b110a0804000000000000000000000007110500000000000000000000000000030f040000000000000000000000000000000000000106171502000000000000000000000012161616140000000000000000000000071616161400000000000000000000000308130804`,
+            hex`10001000010606060602000000000000000000001216161916050000000000000000000007161616160500000000000000000000071816161805000000000000000000000308080808040000000000000000000000000000000001090200000000000000000000000000071105000000000000000000000001060d110c06020000000000000000001011111111110e00000000000000000003080b110a0804000000000000000000000007110500000000000000000000000000030f040000000000000000000000000000000000000106171502000000000000000000000012161616140000000000000000000000071616161400000000000000000000000308130804`,
             img`
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
-                . . . . . . . . . . . . . . . .
+                2 2 2 2 2 2 . . . . . . . . . .
+                2 . . . . 2 . . . . . . . . . .
+                2 . . . . 2 . . . . . . . . . .
+                2 . . . . 2 . . . . . . . . . .
+                2 2 2 2 2 2 . . . . . . . . . .
                 . . . . . . 2 2 2 . . . . . . .
                 . . . . . . 2 . 2 . . . . . . .
                 . . . . 2 2 2 . 2 2 2 . . . . .
@@ -142,11 +165,9 @@ namespace dungeon {
                 . . . . . . . . . . . 2 . . . 2
                 . . . . . . . . . . . 2 2 2 2 2
             `,
-            [myTiles.tile0, sprites.dungeon.greenOuterNorthWest, sprites.dungeon.greenOuterNorthEast, sprites.dungeon.greenOuterSouthEast, sprites.dungeon.greenOuterSouthWest, sprites.dungeon.greenOuterEast0, sprites.dungeon.greenOuterNorth0, sprites.dungeon.greenOuterWest1, sprites.dungeon.greenOuterSouth0, sprites.dungeon.greenOuterNorth2, sprites.dungeon.greenInnerNorthWest, sprites.dungeon.greenInnerNorthEast, sprites.dungeon.greenInnerSouthWest, sprites.dungeon.greenInnerSouthEast, sprites.dungeon.greenOuterEast2, sprites.dungeon.greenOuterSouth2, sprites.dungeon.greenOuterWest2, sprites.dungeon.floorLight2, sprites.dungeon.greenOuterWest0, sprites.dungeon.greenOuterSouth1, sprites.dungeon.greenOuterEast1, sprites.dungeon.greenOuterNorth1, sprites.dungeon.floorDark2, myTiles.tile1, sprites.dungeon.chestClosed, myTiles.tile2],
+            [myTiles.tile0, sprites.dungeon.greenOuterNorthWest, sprites.dungeon.greenOuterNorthEast, sprites.dungeon.greenOuterSouthEast, sprites.dungeon.greenOuterSouthWest, sprites.dungeon.greenOuterEast0, sprites.dungeon.greenOuterNorth0, sprites.dungeon.greenOuterWest1, sprites.dungeon.greenOuterSouth0, sprites.dungeon.greenOuterNorth2, sprites.dungeon.greenInnerNorthWest, sprites.dungeon.greenInnerNorthEast, sprites.dungeon.greenInnerSouthWest, sprites.dungeon.greenInnerSouthEast, sprites.dungeon.greenOuterEast2, sprites.dungeon.greenOuterSouth2, sprites.dungeon.greenOuterWest2, sprites.dungeon.floorLight2, sprites.dungeon.greenOuterWest0, sprites.dungeon.greenOuterSouth1, sprites.dungeon.greenOuterEast1, sprites.dungeon.greenOuterNorth1, sprites.dungeon.floorDark2, myTiles.tile1, sprites.dungeon.chestClosed, myTiles.tile2, myTiles.openDoorTile, sprites.dungeon.chestOpen],
             TileScale.Sixteen
         ))
-
-
 
         doorSprite = sprites.create(img`
             c c c c c c c c c c c c c c c c
@@ -348,7 +369,7 @@ namespace dungeon {
         doorSprite.destroy()
         trapSprite.destroy()
 
-        tiles.setTileAt(tiles.getTileLocation(13, 12), myTiles.tile2)
+        tiles.setTileAt(tiles.getTileLocation(13, 12), myTiles.openDoorTile)
 
         let portalSprite = sprites.create(img`
             . . . . . . . . . . . . . . . .
@@ -377,7 +398,143 @@ namespace dungeon {
         })
     }
 
+    let candidate: number[]
+    let correctRecipe: Recipe
 
+    function prepareRandomIngredients() {
+        candidate = [0, 1, 2]
+        let outIngredient = Math.pickRandom([0, 1, 2])
+
+        if (outIngredient == 0) {
+            correctRecipe = Recipe.TomatoRice
+        } else if (outIngredient == 1) {
+            correctRecipe = Recipe.TomatoEgg
+        } else {
+            correctRecipe = Recipe.FriedRice
+        }
+
+        candidate.removeAt(outIngredient)
+
+
+        if (Math.percentChance(50)) {
+            candidate = [candidate[1], candidate[0]]
+        }
+    }
+    
+    // extract method
+    function dropTomato() {
+        let tomatoSprite = sprites.create(img`
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . 6 6 . . . . .
+            . . . . . . . . 6 6 6 . . . . .
+            . . . . . . . . 6 6 . . . . . .
+            . . . . . 2 2 2 6 7 2 2 . . . .
+            . . . 2 2 1 2 6 6 6 2 2 2 2 . .
+            . . 2 1 1 2 2 2 2 2 2 2 2 2 2 .
+            . . 2 2 2 2 2 2 2 2 2 2 2 2 2 .
+            . . 2 2 2 2 2 2 2 2 2 2 2 2 2 .
+            . . 2 2 2 2 2 2 2 2 2 2 2 2 2 .
+            . . 2 2 2 2 2 2 2 2 2 f f 2 2 .
+            . . . 2 2 2 2 2 2 2 f f 2 2 . .
+            . . . . . 2 2 2 2 2 2 2 . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+        `, SpriteKind.Tomato)
+        tomatoSprite.x = playerSprite.x
+        tomatoSprite.y = playerSprite.y - 20
+
+        tomatoSprite.onDestroyed(function () {
+            ingredientsAcquired += 1
+        })
+    }
+
+    function dropEgg() {
+        let eggSprite = sprites.create(img`
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . 1 1 1 1 1 1 1 . . . .
+            . . . . 1 1 d d 1 1 1 1 1 . . .
+            . . . 1 1 d d 1 1 1 1 1 1 1 . .
+            . . 1 1 1 1 1 1 1 1 1 1 1 1 . .
+            . . 1 1 1 1 1 1 1 1 1 1 1 1 . .
+            . . . 1 1 1 1 1 1 1 1 1 1 1 . .
+            . . . . 1 1 1 1 1 1 1 1 1 . . .
+            . . . . . 1 1 1 1 1 1 1 . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+        `, SpriteKind.Egg)
+        eggSprite.x = playerSprite.x
+        eggSprite.y = playerSprite.y - 20
+
+        eggSprite.onDestroyed(function () {
+            ingredientsAcquired += 1
+        })
+    }
+
+    function dropRice() {
+        let riceSprite = sprites.create(img`
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . b 1 b 1 b 1 1 1 b 1 b 1 1 1 .
+            . d b 1 1 1 1 1 1 1 1 1 1 1 d .
+            . d d d d d d d d d d d d d d .
+            . d d d d d d d d d d d d d d .
+            . d d d d d d d d d d d d d d .
+            . d d d d d d d d d d d d d d .
+            . d d d d d d d d d d d d d d .
+            . d b b b d b d b b d b b d d .
+            . d b d b d b d b d d b d d d .
+            . d b b d d b d b d d b b d d .
+            . d b d b d b d b d d b d d d .
+            . d b d b d b d b b d b b d d .
+            . d d d d d d d d d d d d d d .
+            . . . . . . . . . . . . . . . .
+        `, SpriteKind.Rice)
+        riceSprite.x = playerSprite.x
+        riceSprite.y = playerSprite.y - 20
+
+        riceSprite.onDestroyed(function () {
+            ingredientsAcquired += 1
+        })
+    }
+
+    //%block
+    //%group="Skill"
+    export function openChest() {
+        if (!playerSprite.tileKindAt(TileDirection.Center, sprites.dungeon.chestClosed)) {
+            playerSprite.say('我要在宝箱附近才能开箱', 1000)
+            return
+        }
+
+        if (playerSprite.x < 50) {
+            tiles.setTileAt(tiles.getTileLocation(1, 3), sprites.dungeon.chestOpen)
+        } else {
+            tiles.setTileAt(tiles.getTileLocation(4, 3), sprites.dungeon.chestOpen)
+        }
+        console.log(candidate)
+        let ingredientIndex = candidate[0]
+        candidate.removeAt(0)
+        if (ingredientIndex == 0) {
+            dropEgg()
+        } else if (ingredientIndex == 1) {
+            dropRice()
+        } else {
+            dropTomato()
+        }
+    }
+
+    function prepareLevel3() {
+        prepareRandomIngredients()
+
+        tiles.placeOnTile(playerSprite, tiles.getTileLocation(3, 2))
+        playerSprite.say('这里有篝火，可以做饭, 找找看附近有没有材料', 2000)
+
+    }
 
 
     function prepareLevel2() {
@@ -407,7 +564,9 @@ namespace dungeon {
 
         game.onUpdate(function () {
             if (glowingTorches == 0) {
-                game.over(true)
+                prepareLevel3()
+                // 暴力的去掉这个重复执行的事件
+                glowingTorches = -1
             }
         })
 
@@ -416,7 +575,7 @@ namespace dungeon {
             if (playerSprite.vx != 0 || playerSprite.vy != 0) {
                 moving = true;
                 lastMovingTimeStamp = game.runtime()
-            } else if (game.runtime() - lastMovingTimeStamp > 1000){
+            } else if (game.runtime() - lastMovingTimeStamp > 1000) {
                 moving = false
             }
         })
@@ -501,7 +660,7 @@ namespace dungeon {
             c c c c c c c c c c c c c c c c
         `
         //% blockIdentity=images._tile
-        export const tile2 = img`
+        export const openDoorTile = img`
             c c 7 6 c c 7 c c 7 c c 6 7 c c
             c 7 6 c c 7 6 c c 6 7 c c c 6 c
             c 6 c c 7 6 6 c c 6 6 7 c c 6 c
@@ -519,6 +678,25 @@ namespace dungeon {
             c c c c c c c c c c c c c c c c
             c c c c c c c c c c c c c c c c
         `
+        //% blockIdentity=images._tile
+        export const tile2 = img`
+            b b b b b b b b b b b b b b b b
+            b b b b b b b b b b b b b b b b
+            b b b b b e 5 5 b 5 b b b b b b
+            b b b 5 b b e 5 5 2 2 b b b b b
+            b b b b 5 b e 5 2 2 b b b b b b
+            b b b b b 5 b 2 2 b b 5 b b b b
+            b b b b b e 2 2 5 b 5 b b b b b
+            b b b b b 2 e 2 2 2 b b b b b b
+            b b b b b b 2 e e 5 b b b b b b
+            b b b b 2 2 2 e e e e b b b b b
+            b b b d 2 e e e f e e e d b b b
+            b b d f f e f e f e f e f d b b
+            b b d d e f f e f f e f d d b b
+            b b b d d d f f f f d d d b b b
+            b b b b b d d d d d d b b b b b
+            b b b b b b b b b b b b b b b b
+        `
     }
 }
 
@@ -527,4 +705,10 @@ namespace SpriteKind {
     export const Key = SpriteKind.create();
     //% isKind
     export const Door = SpriteKind.create();
+    //% isKind
+    export const Egg = SpriteKind.create();
+    //% isKind
+    export const Rice = SpriteKind.create();
+    //% isKind
+    export const Tomato = SpriteKind.create();
 }
