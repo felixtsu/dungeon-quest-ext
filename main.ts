@@ -17,10 +17,10 @@ namespace dungeon {
     //%block
     //%group="Skill"
     export function throwWaterBall(direction: WaterballDirection) {
-        if (controller.up.isPressed() || controller.down.isPressed() || 
-        controller.left.isPressed() || controller.right.isPressed()) {
+        if (controller.up.isPressed() || controller.down.isPressed() ||
+            controller.left.isPressed() || controller.right.isPressed()) {
             playerSprite.say("我要站着不动才能发射水球")
-            return 
+            return
         }
         let powerBarSprite = statusbars.getStatusBarAttachedTo(StatusBarKind.Energy, playerSprite)
 
@@ -144,7 +144,7 @@ namespace dungeon {
             TileScale.Sixteen
         ))
 
-        
+
 
         doorSprite = sprites.create(img`
             c c c c c c c c c c c c c c c c
@@ -195,7 +195,7 @@ namespace dungeon {
         tiles.placeOnTile(keySprite, tiles.getTileLocation(12, 14))
     }
 
-    let trapSprite :Sprite = null
+    let trapSprite: Sprite = null
     function prepareTrap() {
         trapSprite = sprites.create(img`
             f f f f f f f f f f f f f f f f
@@ -215,7 +215,7 @@ namespace dungeon {
             f f f f f f f f f f f f f f f f
             f f f f f f f f f f f f f f f f
         `, SPRITE_KIND_TRAP)
-        tiles.placeOnTile(trapSprite,tiles.getTileLocation(13, 11))
+        tiles.placeOnTile(trapSprite, tiles.getTileLocation(13, 11))
 
         sprites.onOverlap(SpriteKind.Player, SPRITE_KIND_TRAP, function (sprite: Sprite, otherSprite: Sprite) {
             game.splash("你作弊破门被发现，即死")
@@ -267,7 +267,7 @@ namespace dungeon {
                     . . . . . f f f f f f . . . . .
                     . . . . . f f . . f f . . . . .
                 `)
-            } else if (playerSprite.vy > 0 ) {
+            } else if (playerSprite.vy > 0) {
                 playerSprite.setImage(img`
                     . . . . . . f f f f . . . . . .
                     . . . . f f f 2 2 f f f . . . .
@@ -286,7 +286,7 @@ namespace dungeon {
                     . . . . . f f f f f f . . . . .
                     . . . . . f f . . f f . . . . .
                 `)
-            }  else if (playerSprite.vx < 0) {
+            } else if (playerSprite.vx < 0) {
                 playerSprite.setImage(img`
                     . . . . . . . . . . . . . . . .
                     . . . . f f f f f f . . . . . .
@@ -324,10 +324,10 @@ namespace dungeon {
                     . . . . f f f f f f f f f f . .
                     . . . . . f f . . . f f f . . .
                 `)
-            } 
+            }
         })
-            
-        
+
+
     }
 
     //%block
@@ -335,10 +335,10 @@ namespace dungeon {
     export function openDoor() {
         if (!playerSprite.overlapsWith(doorSprite)) {
             playerSprite.say("我要走到门旁边才能开门")
-            return ;
+            return;
         }
 
-        if(sprites.allOfKind(SpriteKind.Key).length != 0) {
+        if (sprites.allOfKind(SpriteKind.Key).length != 0) {
             game.splash("想要暴力推门，结果被门砸死了")
             game.over()
         }
@@ -379,18 +379,22 @@ namespace dungeon {
     function prepareLevel2() {
         let glowingTorches = 4
         scene.onHitWall(SPRITE_KIND_WATER_BALL, function (sprite: Sprite) {
-            if (sprite.tileKindAt(TileDirection.Right, sprites.dungeon.greenOuterEast2)) {
+            if (sprite.isHittingTile(CollisionDirection.Right)
+                && sprite.tileKindAt(TileDirection.Right, sprites.dungeon.greenOuterEast2)) {
                 tiles.setTileAt(tiles.getTileLocation(10, 8), sprites.dungeon.greenOuterEast0)
-                glowingTorches -= 1 
-            } else if (sprite.tileKindAt(TileDirection.Left, sprites.dungeon.greenOuterWest2)) {
+                glowingTorches -= 1
+            } else if (sprite.isHittingTile(CollisionDirection.Left)
+                && sprite.tileKindAt(TileDirection.Left, sprites.dungeon.greenOuterWest2)) {
                 tiles.setTileAt(tiles.getTileLocation(4, 8), sprites.dungeon.greenOuterWest1)
-                glowingTorches -= 1 
-            } else if (sprite.tileKindAt(TileDirection.Top, sprites.dungeon.greenOuterNorth2)) {
+                glowingTorches -= 1
+            } else if (sprite.isHittingTile(CollisionDirection.Top)
+                && sprite.tileKindAt(TileDirection.Top, sprites.dungeon.greenOuterNorth2)) {
                 tiles.setTileAt(tiles.getTileLocation(7, 5), sprites.dungeon.greenOuterNorth0)
-                glowingTorches -= 1 
-            } else if (sprite.tileKindAt(TileDirection.Bottom, sprites.dungeon.greenOuterSouth2)) {
+                glowingTorches -= 1
+            } else if (sprite.isHittingTile(CollisionDirection.Bottom)
+                && sprite.tileKindAt(TileDirection.Bottom, sprites.dungeon.greenOuterSouth2)) {
                 tiles.setTileAt(tiles.getTileLocation(7, 11), sprites.dungeon.greenOuterSouth0)
-                glowingTorches -= 1 
+                glowingTorches -= 1
             }
         })
 
