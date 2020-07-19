@@ -44,8 +44,12 @@ namespace dungeon {
     //%block
     //%group="Skill"
     export function throwWaterBall(direction: WaterballDirection) {
-        if (moving) {
-            playerSprite.say("我要站着不动才能发射水球", 1000)
+
+
+        if (controller.up.isPressed() || controller.down.isPressed() || 
+            controller.right.isPressed() || controller.left.isPressed() || 
+            moving) {
+            playerSprite.say("我要站着不动才能发射水球", 500)
             return
         }
         let powerBarSprite = statusbars.getStatusBarAttachedTo(StatusBarKind.Energy, playerSprite)
@@ -577,7 +581,7 @@ namespace dungeon {
             if (playerSprite.vx != 0 || playerSprite.vy != 0) {
                 moving = true;
                 lastMovingTimeStamp = game.runtime()
-            } else if (game.runtime() - lastMovingTimeStamp > 1000) {
+            } else if (game.runtime() - lastMovingTimeStamp > 500) {
                 moving = false
             }
         })
