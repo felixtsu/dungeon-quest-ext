@@ -191,6 +191,8 @@ namespace dungeon {
 
         preparePlayer()
         prepareTrap()
+
+        game.splash("Use your coding skill to explore the dungeon, find a way out.")
     }
 
 
@@ -590,22 +592,22 @@ namespace dungeon {
 
     function prepareWaterFountain() {
         let waterPowerFountainSprite = sprites.create(img`
-            d d d d d 8 8 8 8 8 8 d d d d d
-            d d d d 8 8 9 9 9 9 8 8 d d d d
-            d d d 8 8 9 9 9 9 9 9 8 8 d d d
-            d d 8 8 9 1 1 9 9 9 9 9 8 8 d d
-            d 8 8 9 1 1 9 9 9 9 9 9 9 8 8 d
-            8 8 9 1 1 9 9 9 9 9 1 9 9 9 8 8
-            8 9 9 1 9 9 9 9 9 9 9 9 9 9 9 8
-            8 9 9 9 9 9 9 9 9 9 9 9 9 9 9 8
-            8 9 9 9 9 9 9 9 9 9 9 9 9 9 9 8
-            8 9 9 9 9 1 9 9 9 9 1 9 9 9 9 8
-            8 8 9 9 9 9 9 9 1 9 9 9 9 9 8 8
-            d 8 8 9 9 9 9 9 9 9 9 9 9 8 8 d
-            d d 8 8 9 9 1 9 9 1 9 9 8 8 d d
-            d d d 8 8 9 9 9 9 9 9 8 8 d d d
-            d d d d 8 8 9 9 9 9 8 8 d d d d
-            d d d d d 8 8 8 8 8 8 d d d d d
+            d 1 1 1 1 1 1 1 1 1 1 1 1 1 1 b
+            1 d d d 8 8 8 8 8 8 8 8 d d d b
+            1 d d 8 8 9 9 9 9 9 9 8 8 d d b
+            1 d 8 8 9 1 1 9 9 9 9 9 8 8 d b
+            1 8 8 9 1 1 9 9 9 9 9 9 9 8 8 b
+            1 8 9 1 1 9 9 9 9 9 1 9 9 9 8 b
+            1 8 9 1 9 9 9 9 9 9 9 9 9 9 8 b
+            1 8 9 9 9 9 9 9 9 9 9 9 9 9 8 b
+            1 8 9 9 9 9 9 9 9 9 9 9 9 9 8 b
+            1 8 9 9 9 1 9 9 9 9 1 9 9 9 8 b
+            1 8 9 9 9 9 9 9 1 9 9 9 9 9 8 b
+            1 8 8 9 9 9 9 9 9 9 9 9 9 8 8 b
+            1 d 8 8 9 9 1 9 9 1 9 9 8 8 d b
+            1 d d 8 8 9 9 9 9 9 9 8 8 d d b
+            1 d d d 8 8 8 8 8 8 8 8 d d d b
+            b b b b b b b b b b b b b b b b
         `, SPRITE_KIND_WATER_FOUNTAIN)
         // waterPowerFountainSprite.z = -100
         tiles.placeOnTile(waterPowerFountainSprite, tiles.getTileLocation(7, 8))
@@ -680,22 +682,22 @@ namespace dungeon {
         `
         //% blockIdentity=images._tile
         export const tile2 = img`
-            b b b b b b b b b b b b b b b b
-            b b b b b b b b b b b b b b b b
-            b b b b b e 5 5 b 5 b b b b b b
-            b b b 5 b b e 5 5 2 2 b b b b b
-            b b b b 5 b e 5 2 2 b b b b b b
-            b b b b b 5 b 2 2 b b 5 b b b b
-            b b b b b e 2 2 5 b 5 b b b b b
-            b b b b b 2 e 2 2 2 b b b b b b
-            b b b b b b 2 e e 5 b b b b b b
-            b b b b 2 2 2 e e e e b b b b b
-            b b b d 2 e e e f e e e d b b b
-            b b d f f e f e f e f e f d b b
-            b b d d e f f e f f e f d d b b
-            b b b d d d f f f f d d d b b b
-            b b b b b d d d d d d b b b b b
-            b b b b b b b b b b b b b b b b
+            b d d d d d d d d d d d d d d c
+            d b b b b b b b b b b b b b b c
+            d b b b b e 5 5 b 5 b b b b b c
+            d b b 5 b b e 5 5 2 2 b b b b c
+            d b b b 5 b e 5 2 2 b b b b b c
+            d b b b b 5 b 2 2 b b 5 b b b c
+            d b b b b e 2 2 5 b 5 b b b b c
+            d b b b b 2 e 2 2 2 b b b b b c
+            d b b b b b 2 e e 5 b b b b b c
+            d b b b 2 2 2 e e e e b b b b c
+            d b b d 2 e e e f e e e d b b c
+            d b d f f e f e f e f e f d b c
+            d b d d e f f e f f e f d d b c
+            d b b d d d f f f f d d d b b c
+            d b b b b d d d d d d b b b b c
+            b c c c c c c c c c c c c c c a
         `
     }
 }
