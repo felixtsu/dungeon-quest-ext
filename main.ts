@@ -47,8 +47,6 @@ namespace dungeon {
     //%block
     //%group="Skill"
     export function throwWaterBall(direction: WaterballDirection) {
-
-
         if (controller.up.isPressed() || controller.down.isPressed() || 
             controller.right.isPressed() || controller.left.isPressed() || 
             moving) {
@@ -153,27 +151,51 @@ namespace dungeon {
     //%block
     //%group="Game"
     export function prepareDungeon() {
+        // tiles.setTilemap(tiles.createTilemap(
+        //     hex`10001000010606060602000000000000000000001216161916050000000000000000000007161616160500000000000000000000071816161805000000000000000000000308080808040000000000000000000000000000000001090200000000000000000000000000071105000000000000000000000001060d110c06020000000000000000001011111111110e00000000000000000003080b110a0804000000000000000000000007110500000000000000000000000000030f040000000000000000000000000000000000000106171502000000000000000000000012161616140000000000000000000000071616161400000000000000000000000308130804`,
+        //     img`
+        //         2 2 2 2 2 2 . . . . . . . . . .
+        //         2 . . . . 2 . . . . . . . . . .
+        //         2 . . . . 2 . . . . . . . . . .
+        //         2 . . . . 2 . . . . . . . . . .
+        //         2 2 2 2 2 2 . . . . . . . . . .
+        //         . . . . 2 2 2 2 2 2 2 . . . . .
+        //         . . . . 2 . . . 2 . 2 . . . . .
+        //         . . . . 2 2 2 . 2 . 2 . . . . .
+        //         . . . . 2 . . . . . 2 . . . . .
+        //         . . . . 2 . 2 . 2 2 2 . . . . .
+        //         . . . . 2 . 2 . . . 2 . . . . .
+        //         . . . . 2 2 2 2 2 2 2 . . . . .
+        //         . . . . . . . . . . . 2 2 . 2 2
+        //         . . . . . . . . . . . 2 . . . 2
+        //         . . . . . . . . . . . 2 . . . 2
+        //         . . . . . . . . . . . 2 2 2 2 2
+        //     `,
+        //     [myTiles.tile0, sprites.dungeon.greenOuterNorthWest, sprites.dungeon.greenOuterNorthEast, sprites.dungeon.greenOuterSouthEast, sprites.dungeon.greenOuterSouthWest, sprites.dungeon.greenOuterEast0, sprites.dungeon.greenOuterNorth0, sprites.dungeon.greenOuterWest1, sprites.dungeon.greenOuterSouth0, sprites.dungeon.greenOuterNorth2, sprites.dungeon.greenInnerNorthWest, sprites.dungeon.greenInnerNorthEast, sprites.dungeon.greenInnerSouthWest, sprites.dungeon.greenInnerSouthEast, sprites.dungeon.greenOuterEast2, sprites.dungeon.greenOuterSouth2, sprites.dungeon.greenOuterWest2, sprites.dungeon.floorLight2, sprites.dungeon.greenOuterWest0, sprites.dungeon.greenOuterSouth1, sprites.dungeon.greenOuterEast1, sprites.dungeon.greenOuterNorth1, sprites.dungeon.floorDark2, myTiles.tile1, sprites.dungeon.chestClosed, myTiles.tile2, myTiles.openDoorTile, sprites.dungeon.chestOpen],
+        //     TileScale.Sixteen
+        // ))
+
         tiles.setTilemap(tiles.createTilemap(
-            hex`10001000010606060602000000000000000000001216161916050000000000000000000007161616160500000000000000000000071816161805000000000000000000000308080808040000000000000000000000000000000001090200000000000000000000000000071105000000000000000000000001060d110c06020000000000000000001011111111110e00000000000000000003080b110a0804000000000000000000000007110500000000000000000000000000030f040000000000000000000000000000000000000106171502000000000000000000000012161616140000000000000000000000071616161400000000000000000000000308130804`,
+            hex`1000100001060606060200000000000000000000121616191605000000000000000000000716161616050000000000000000000007181616180500000000000000000000030808080804000000000000000000000000000001060606060902000000000000000000101111111a1105000000000000000000121a1a111a11050000000000000000000711111111110500000000000000000012111a111a1a0500000000000000000012111a1111110e000000000000000000030f1308131304000000000000000000000000000000000106171502000000000000000000000012161616140000000000000000000000071616161400000000000000000000000308130804`,
             img`
                 2 2 2 2 2 2 . . . . . . . . . .
                 2 . . . . 2 . . . . . . . . . .
                 2 . . . . 2 . . . . . . . . . .
                 2 . . . . 2 . . . . . . . . . .
                 2 2 2 2 2 2 . . . . . . . . . .
-                . . . . . . 2 2 2 . . . . . . .
-                . . . . . . 2 . 2 . . . . . . .
-                . . . . 2 2 2 . 2 2 2 . . . . .
+                . . . . 2 2 2 2 2 2 2 . . . . .
+                . . . . 2 . . . 2 . 2 . . . . .
+                . . . . 2 2 2 . 2 . 2 . . . . .
                 . . . . 2 . . . . . 2 . . . . .
-                . . . . 2 2 2 . 2 2 2 . . . . .
-                . . . . . . 2 . 2 . . . . . . .
-                . . . . . . 2 2 2 . . . . . . .
+                . . . . 2 . 2 . 2 2 2 . . . . .
+                . . . . 2 . 2 . . . 2 . . . . .
+                . . . . 2 2 2 2 2 2 2 . . . . .
                 . . . . . . . . . . . 2 2 . 2 2
                 . . . . . . . . . . . 2 . . . 2
                 . . . . . . . . . . . 2 . . . 2
                 . . . . . . . . . . . 2 2 2 2 2
             `,
-            [myTiles.tile0, sprites.dungeon.greenOuterNorthWest, sprites.dungeon.greenOuterNorthEast, sprites.dungeon.greenOuterSouthEast, sprites.dungeon.greenOuterSouthWest, sprites.dungeon.greenOuterEast0, sprites.dungeon.greenOuterNorth0, sprites.dungeon.greenOuterWest1, sprites.dungeon.greenOuterSouth0, sprites.dungeon.greenOuterNorth2, sprites.dungeon.greenInnerNorthWest, sprites.dungeon.greenInnerNorthEast, sprites.dungeon.greenInnerSouthWest, sprites.dungeon.greenInnerSouthEast, sprites.dungeon.greenOuterEast2, sprites.dungeon.greenOuterSouth2, sprites.dungeon.greenOuterWest2, sprites.dungeon.floorLight2, sprites.dungeon.greenOuterWest0, sprites.dungeon.greenOuterSouth1, sprites.dungeon.greenOuterEast1, sprites.dungeon.greenOuterNorth1, sprites.dungeon.floorDark2, myTiles.tile1, sprites.dungeon.chestClosed, myTiles.tile2, myTiles.openDoorTile, sprites.dungeon.chestOpen],
+            [myTiles.tile0, sprites.dungeon.greenOuterNorthWest, sprites.dungeon.greenOuterNorthEast, sprites.dungeon.greenOuterSouthEast, sprites.dungeon.greenOuterSouthWest, sprites.dungeon.greenOuterEast0, sprites.dungeon.greenOuterNorth0, sprites.dungeon.greenOuterWest1, sprites.dungeon.greenOuterSouth0, sprites.dungeon.greenOuterNorth2, sprites.dungeon.greenInnerNorthWest, sprites.dungeon.greenInnerNorthEast, sprites.dungeon.greenInnerSouthWest, sprites.dungeon.greenInnerSouthEast, sprites.dungeon.greenOuterEast2, sprites.dungeon.greenOuterSouth2, sprites.dungeon.greenOuterWest2, sprites.dungeon.floorLight2, sprites.dungeon.greenOuterWest0, sprites.dungeon.greenOuterSouth1, sprites.dungeon.greenOuterEast1, sprites.dungeon.greenOuterNorth1, sprites.dungeon.floorDark2, myTiles.tile1, sprites.dungeon.chestClosed, myTiles.tile2, sprites.dungeon.stairLadder, myTiles.tile2, myTiles.openDoorTile, sprites.dungeon.chestOpen],
             TileScale.Sixteen
         ))
 
@@ -203,6 +225,7 @@ namespace dungeon {
         game.splash("Use your coding skill to explore the dungeon, find a way out.")
     }
 
+    let keyDropped = false;
 
     //%block 
     //%group="Game"
@@ -226,6 +249,8 @@ namespace dungeon {
             . . . . . . . . . . . . . . . .
         `, SpriteKind.Key)
         tiles.placeOnTile(keySprite, tiles.getTileLocation(12, 14))
+
+        keyDropped = true;
     }
 
     let trapSprite: Sprite = null
@@ -373,7 +398,7 @@ namespace dungeon {
             return;
         }
 
-        if (sprites.allOfKind(SpriteKind.Key).length != 0) {
+        if (sprites.allOfKind(SpriteKind.Key).length != 0 || !keyDropped) {
             // game.splash("Pushing the door by brutal force, it collapsed and killed you. ")
             game.splash("想要暴力推门，结果被门砸死了")
             game.over()
@@ -530,7 +555,6 @@ namespace dungeon {
         } else {
             tiles.setTileAt(tiles.getTileLocation(4, 3), sprites.dungeon.chestOpen)
         }
-        console.log(candidate)
         let ingredientIndex = candidate[0]
         candidate.removeAt(0)
         if (ingredientIndex == 0) {
@@ -557,19 +581,19 @@ namespace dungeon {
         scene.onHitWall(SPRITE_KIND_WATER_BALL, function (sprite: Sprite) {
             if (sprite.isHittingTile(CollisionDirection.Right)
                 && sprite.tileKindAt(TileDirection.Right, sprites.dungeon.greenOuterEast2)) {
-                tiles.setTileAt(tiles.getTileLocation(10, 8), sprites.dungeon.greenOuterEast0)
+                tiles.setTileAt(tiles.getTileLocation(10, 10), sprites.dungeon.greenOuterEast0)
                 glowingTorches -= 1
             } else if (sprite.isHittingTile(CollisionDirection.Left)
                 && sprite.tileKindAt(TileDirection.Left, sprites.dungeon.greenOuterWest2)) {
-                tiles.setTileAt(tiles.getTileLocation(4, 8), sprites.dungeon.greenOuterWest1)
+                tiles.setTileAt(tiles.getTileLocation(4, 6), sprites.dungeon.greenOuterWest1)
                 glowingTorches -= 1
             } else if (sprite.isHittingTile(CollisionDirection.Top)
                 && sprite.tileKindAt(TileDirection.Top, sprites.dungeon.greenOuterNorth2)) {
-                tiles.setTileAt(tiles.getTileLocation(7, 5), sprites.dungeon.greenOuterNorth0)
+                tiles.setTileAt(tiles.getTileLocation(9, 5), sprites.dungeon.greenOuterNorth0)
                 glowingTorches -= 1
             } else if (sprite.isHittingTile(CollisionDirection.Bottom)
                 && sprite.tileKindAt(TileDirection.Bottom, sprites.dungeon.greenOuterSouth2)) {
-                tiles.setTileAt(tiles.getTileLocation(7, 11), sprites.dungeon.greenOuterSouth0)
+                tiles.setTileAt(tiles.getTileLocation(5, 11), sprites.dungeon.greenOuterSouth0)
                 glowingTorches -= 1
             }
         })
