@@ -1,5 +1,5 @@
 //% weight=99 color="#6d5ba5" icon="\uf004"
-//%groups='["Skill", "Game"]'
+//%groups='["Skill", "Game", "Dialog"]'
 namespace dungeon {
 
     let playerSprite: Sprite = null
@@ -8,6 +8,9 @@ namespace dungeon {
     const SPRITE_KIND_WATER_FOUNTAIN = SpriteKind.create()
     const SPRITE_KIND_OPEN_DOOR = SpriteKind.create()
     const SPRITE_KIND_TRAP = SpriteKind.create()
+
+    const SPRITE_KIND_PROPHET = SpriteKind.create()
+    const SPRITE_KIND_RAT_ROOM_DOOR = SpriteKind.create()
 
     export enum WaterballDirection {
         UP, DOWN, RIGHT, LEFT
@@ -151,30 +154,6 @@ namespace dungeon {
     //%block
     //%group="Game"
     export function prepareDungeon() {
-        // tiles.setTilemap(tiles.createTilemap(
-        //     hex`10001000010606060602000000000000000000001216161916050000000000000000000007161616160500000000000000000000071816161805000000000000000000000308080808040000000000000000000000000000000001090200000000000000000000000000071105000000000000000000000001060d110c06020000000000000000001011111111110e00000000000000000003080b110a0804000000000000000000000007110500000000000000000000000000030f040000000000000000000000000000000000000106171502000000000000000000000012161616140000000000000000000000071616161400000000000000000000000308130804`,
-        //     img`
-        //         2 2 2 2 2 2 . . . . . . . . . .
-        //         2 . . . . 2 . . . . . . . . . .
-        //         2 . . . . 2 . . . . . . . . . .
-        //         2 . . . . 2 . . . . . . . . . .
-        //         2 2 2 2 2 2 . . . . . . . . . .
-        //         . . . . 2 2 2 2 2 2 2 . . . . .
-        //         . . . . 2 . . . 2 . 2 . . . . .
-        //         . . . . 2 2 2 . 2 . 2 . . . . .
-        //         . . . . 2 . . . . . 2 . . . . .
-        //         . . . . 2 . 2 . 2 2 2 . . . . .
-        //         . . . . 2 . 2 . . . 2 . . . . .
-        //         . . . . 2 2 2 2 2 2 2 . . . . .
-        //         . . . . . . . . . . . 2 2 . 2 2
-        //         . . . . . . . . . . . 2 . . . 2
-        //         . . . . . . . . . . . 2 . . . 2
-        //         . . . . . . . . . . . 2 2 2 2 2
-        //     `,
-        //     [myTiles.tile0, sprites.dungeon.greenOuterNorthWest, sprites.dungeon.greenOuterNorthEast, sprites.dungeon.greenOuterSouthEast, sprites.dungeon.greenOuterSouthWest, sprites.dungeon.greenOuterEast0, sprites.dungeon.greenOuterNorth0, sprites.dungeon.greenOuterWest1, sprites.dungeon.greenOuterSouth0, sprites.dungeon.greenOuterNorth2, sprites.dungeon.greenInnerNorthWest, sprites.dungeon.greenInnerNorthEast, sprites.dungeon.greenInnerSouthWest, sprites.dungeon.greenInnerSouthEast, sprites.dungeon.greenOuterEast2, sprites.dungeon.greenOuterSouth2, sprites.dungeon.greenOuterWest2, sprites.dungeon.floorLight2, sprites.dungeon.greenOuterWest0, sprites.dungeon.greenOuterSouth1, sprites.dungeon.greenOuterEast1, sprites.dungeon.greenOuterNorth1, sprites.dungeon.floorDark2, myTiles.tile1, sprites.dungeon.chestClosed, myTiles.tile2, myTiles.openDoorTile, sprites.dungeon.chestOpen],
-        //     TileScale.Sixteen
-        // ))
-
         tiles.setTilemap(tiles.createTilemap(
             hex`1000100001060606060200000000000000000000121616191605000000000000000000000716161616050000000000000000000007181616180500000000000000000000030808080804000000000000000000000000000001060606060902000000000000000000101111111a1105000000000000000000121a1a111a11050000000000000000000711111111110500000000000000000012111a111a1a0500000000000000000012111a1111110e000000000000000000030f1308131304000000000000000000000000000000000106171502000000000000000000000012161616140000000000000000000000071616161400000000000000000000000308130804`,
             img`
@@ -385,8 +364,6 @@ namespace dungeon {
                 `)
             }
         })
-
-
     }
 
     //%block
@@ -432,7 +409,8 @@ namespace dungeon {
         sprites.onOverlap(SpriteKind.Player, SPRITE_KIND_PORTAL, (sprite, otherSprite) => {
             tiles.placeOnTile(sprite, tiles.getTileLocation(7, 8))
             otherSprite.destroy()
-            prepareLevel2()
+            // prepareLevel2()
+            prepareLevel4()
         })
     }
 
@@ -646,7 +624,6 @@ namespace dungeon {
             1 d d d 8 8 8 8 8 8 8 8 d d d b
             b b b b b b b b b b b b b b b b
         `, SPRITE_KIND_WATER_FOUNTAIN)
-        // waterPowerFountainSprite.z = -100
         tiles.placeOnTile(waterPowerFountainSprite, tiles.getTileLocation(7, 8))
 
         sprites.onOverlap(SpriteKind.Player, SPRITE_KIND_WATER_FOUNTAIN, function (sprite: Sprite, otherSprite: Sprite) {
@@ -657,6 +634,280 @@ namespace dungeon {
             }
             pause(1000)
         })
+    }
+
+    let goddessSprite :Sprite =null
+
+    function prepareLevel4() {
+        tiles.setTilemap(tilemap`level`)
+        let prophetSprite = sprites.create(img`
+            . . . . f f f f . . . .
+            . . f f e e e e f f . .
+            . f f e e e e e e f f .
+            f f f f 4 e e e f f f f
+            f f f 4 4 4 e e f f f f
+            f f f 4 4 4 4 e e f f f
+            f 4 e 4 4 4 4 4 4 e 4 f
+            f 4 4 f f 4 4 f f 4 4 f
+            f e 4 d d d d d d 4 e f
+            . f e d d b b d d e f .
+            . f f e 4 4 4 4 e f f .
+            e 4 f b 1 1 1 1 b f 4 e
+            4 d f 1 1 1 1 1 1 f d 4
+            4 4 f 6 6 6 6 6 6 f 4 4
+            . . . f f f f f f . . .
+            . . . f f . . f f . . .
+        `, SPRITE_KIND_PROPHET)
+
+        tiles.placeOnTile(prophetSprite, tiles.getTileLocation(6, 13))
+        sprites.onOverlap(SpriteKind.Player, SPRITE_KIND_PROPHET, function(sprite: Sprite, otherSprite: Sprite) {
+            game.splash('All mighty player')
+            game.splash('Give your answer to the alter')
+            game.splash('How many rats are there')
+            game.splash('The magic rats absorb life from nearby living creature,')
+            game.splash('Even the mighty hero in ghost mode can not stand a sec.')
+            otherSprite.setFlag(SpriteFlag.Ghost, true)
+        })
+
+        goddessSprite = sprites.create(img`
+            . . . . . . . . . . . . . . . .
+            . . . . . . . 1 1 1 . . . . . .
+            . . . . . . 1 3 3 3 . . . . . .
+            . . . . . . 1 3 1 1 . . . . . .
+            . . . . . . 3 1 1 1 . . . . . .
+            . . . . . . 3 b 1 3 1 . . . . .
+            . . . . . . b 3 b 3 1 1 . . . .
+            . . . . . . 3 1 3 1 3 1 . . . .
+            . . . . . b 3 1 3 1 b 1 . . . .
+            . . . . . b 3 3 3 1 1 3 . . . .
+            . . . . . b c 3 1 3 1 1 . . . .
+            . . . . 3 b c 3 1 1 3 1 . . . .
+            . . . . 3 b c 1 1 1 1 . . . . .
+            . . . . 3 c 3 1 1 1 1 . . . . .
+            . . . 3 3 c 1 1 1 1 1 3 . . . .
+            . . . 1 b 3 1 1 1 1 1 1 . . . .
+            . . . . . 3 1 1 1 1 1 1 . . . .
+            . . . . . 3 1 1 3 1 1 1 . . . .
+            . . . . . 3 1 1 3 1 1 1 3 . . .
+            . b b b b 3 1 1 3 1 1 1 1 b b .
+            b 1 1 1 3 3 1 3 3 1 1 1 1 3 1 b
+            3 1 1 3 1 3 1 3 3 1 1 3 1 3 1 3
+            3 1 1 3 1 1 1 3 3 1 1 3 3 3 1 3
+            3 1 1 1 3 1 1 3 3 1 1 3 3 1 1 3
+            3 1 1 1 1 3 3 3 3 3 3 3 3 1 1 3
+            3 1 1 1 1 1 3 3 3 3 3 1 1 1 1 3
+            b 1 1 1 1 1 1 1 1 1 1 1 1 1 1 b
+            3 b b 1 1 1 1 1 1 1 1 1 1 b b 3
+            1 3 3 3 3 3 3 3 3 3 3 3 3 3 3 1
+            1 3 3 3 3 b b b b b b 3 3 3 3 1
+            b 3 3 3 3 3 3 3 3 3 3 3 3 3 3 b
+            c b b b b b b b b b b b b b b c
+        `, SpriteKind.Goddess)        
+        tiles.placeOnTile(goddessSprite, tiles.getTileLocation(9, 13))
+        goddessSprite.y -= 8
+
+        let level4LeftDoorSprite = sprites.create(img`
+            c c c c c c c c c c c c c c c c
+            c a a a a a a a a a a a a a c c
+            c a c c c c c c c c c c c c c c
+            c a c c c c c c c c c c c c c c
+            c a c c c c c c c c c c c c c c
+            c a c c c a a a a a a a a a c c
+            c a c c c a c c c c a c c c c c
+            c a c c c a c a a c a c a a a a
+            c a c c c a c a a c a c a a a a
+            c a c c c a c a a c a c a a a a
+            c a c c c a c c c c a c c c c c
+            c a c c c a a a a a a a a a c c
+            c a c c c c c c c c c c c c c c
+            c a c c c c c c c c c c c c c c
+            c a c c c c c c c c c c c c c c
+            c a a a a a a a a a a a a a c c
+        `, SPRITE_KIND_RAT_ROOM_DOOR)
+        tiles.placeOnTile(level4LeftDoorSprite, tiles.getTileLocation(7, 12))
+        let level4RightDoorSprite = sprites.create(img`
+            c c c c c c c c c c c c c c c c
+            c a a a a a a a a a a a a a a c
+            c c c c c c c c c c c c c c a c
+            c c c c c c c c c c c c c c a c
+            c c c c c c c c c c c c c c a c
+            c a a a a a a a a a a c c c a c
+            c c c c c a c c c c a c c c a c
+            a a a a c a c a a c a c c c a c
+            a a a a c a c a a c a c c c a c
+            a a a a c a c a a c a c c c a c
+            c c c c c a c c c c a c c c a c
+            c a a a a a a a a a a c c c a c
+            c c c c c c c c c c c c c c a c
+            c c c c c c c c c c c c c c a c
+            c c c c c c c c c c c c c c a c
+            c a a a a a a a a a a a a a a c
+        `, SPRITE_KIND_RAT_ROOM_DOOR)
+        tiles.placeOnTile(level4RightDoorSprite, tiles.getTileLocation(8, 12))
+
+        sprites.onOverlap(SpriteKind.Player, SPRITE_KIND_RAT_ROOM_DOOR, function(sprite: Sprite, otherSprite: Sprite) {
+            if (!ratNumberAnswer) {
+                game.splash("Give your answer to the goddess,")
+                game.splash("Before you can face the challenge,")
+                game.splash("The correct answer give you nothing,")
+                game.splash("The incorrect answer give you death.")
+                sprite.y += 2
+            } else {
+                let doors = sprites.allOfKind(SPRITE_KIND_RAT_ROOM_DOOR)
+                for (let doorSprite of doors) {
+                    doorSprite.destroy()
+                }
+                checkAnswer()
+            }
+        })
+
+        prepareRandomNumberRats()
+
+        tiles.placeOnTile(playerSprite, tiles.getTileLocation(8, 15))
+    }
+
+    function revealRatRoom() {
+        for (let location of tiles.getTilesByType(myTiles.allBlack)) {
+            tiles.setTileAt(location, sprites.dungeon.floorDark2)
+        }
+        for (let ratSprite of sprites.allOfKind(SpriteKind.Rat)) {
+            ratSprite.setImage(spriteImages.ratImage)
+        }
+        for (let ratSprite of sprites.allOfKind(SpriteKind.Rat)) {
+            scene.cameraFollowSprite(ratSprite)
+            pause(500)
+        }
+    }
+
+
+    //%block
+    //%group="Dialog"
+    export function giveAnswer(numberOfRat:number) {
+        ratNumberAnswer = numberOfRat
+        game.splash("The goddess writes down your answer, " + numberOfRat)
+        goddessSprite.destroy()
+    }
+
+    function createMagicRat(speed:number) {
+         let ratSprite = sprites.create(spriteImages.ratImage, SpriteKind.Rat);
+                        tiles.placeOnRandomTile(ratSprite, sprites.dungeon.floorDark2)
+                        ratSprite.follow(playerSprite, speed)
+    }
+
+    function startRatFight(speed:number) {
+        let inRatFight = true;
+        let reviveCounter = 0;
+        game.onUpdate(function(){ 
+            if(!inRatFight) return;
+
+            let allRatSprites = sprites.allOfKind(SpriteKind.Rat)
+            if (allRatSprites.length == 0) {
+                inRatFight = false;
+                
+                if (speed == 50) {
+                    game.splash("The magic rats sense great power inside you, becoming frenzied.")
+                    for (let i  = 0; i <ratNumber; i++) {
+                        createMagicRat(100)
+                    }
+                    startRatFight(100)
+                } else {
+                    game.over(true)
+                }
+
+            } else  
+                if (ratNumber > allRatSprites.length) {
+                    reviveCounter += 1
+                    if (reviveCounter % 5 == 0) {
+                        game.splash('These magic rats are reviving their fallen companion(s).')
+                    }
+                
+                    for (let i = ratNumberAnswer - allRatSprites.length; i > 0; i--) {
+                        createMagicRat(speed)
+                    }
+            }
+
+
+            for (let ratSprite of sprites.allOfKind(SpriteKind.Rat)) {
+                if (Math.pow(ratSprite.x - playerSprite.x, 2) + Math.pow(ratSprite.y - playerSprite.y, 2) < 64) {
+                    info.changeLifeBy(-1)
+                }
+            }
+        })
+
+        for (let ratSprite of sprites.allOfKind(SpriteKind.Rat)) {
+            ratSprite.follow(playerSprite, speed)
+        }
+    }
+
+    function checkAnswer() {
+
+        controller.moveSprite(playerSprite, 0, 0)
+        revealRatRoom()
+
+        if(ratNumberAnswer == ratNumber) {
+            game.splash('You have proved your inner power in sensing,')
+            game.splash('Now once again use your inner power to fight them.')
+            controller.moveSprite(playerSprite)
+            scene.cameraFollowSprite(playerSprite)
+
+            startRatFight(50)
+        } else {
+            game.splash("There's " + ratNumber + " rats,")
+            game.splash("The journey afterwards is too dangerous for someone without inner power." )
+            game.over()
+        }
+    }
+
+    let ratNumber : number = NaN
+    let ratNumberAnswer : number = NaN
+
+    function prepareRandomNumberRats() {
+        ratNumber = randint(5, 10)
+        for (let i = 0; i < ratNumber; i++) {
+            let ratSprite = sprites.create(spriteImages.ratImageHidden, SpriteKind.Rat)
+           
+        tiles.placeOnRandomTile(ratSprite, myTiles.allBlack)
+        }
+    }
+
+    namespace spriteImages {
+        export const ratImage = img`
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . f f . . . . . . . . .
+                . . . . . f f . . . . . . . f .
+                . . . . f f . . . . . . . f f .
+                . . . f f f f . . . . . f f . .
+                . . . f 5 f f f . . f f f . . .
+                . . f f f f f f f f f f f . . .
+                . . . . f f f f f f f f . . . .
+                . . . . . f 1 f f f 1 1 1 . . .
+                . . . . 1 1 . 1 . 1 1 . 1 . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+            `
+
+        export const ratImageHidden = img`
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+        `
     }
 
     namespace myTiles {
@@ -736,6 +987,25 @@ namespace dungeon {
             d b b b b d d d d d d b b b b c
             b c c c c c c c c c c c c c c a
         `
+
+        export const allBlack = img`
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+            f f f f f f f f f f f f f f f f
+        `
     }
 }
 
@@ -750,4 +1020,8 @@ namespace SpriteKind {
     export const Rice = SpriteKind.create();
     //% isKind
     export const Tomato = SpriteKind.create();
+    //% isKind
+    export const Rat = SpriteKind.create();
+    //% isKind
+    export const Goddess = SpriteKind.create();
 }
