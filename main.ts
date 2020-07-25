@@ -545,6 +545,8 @@ namespace dungeon {
     }
 
     function prepareLevel3() {
+        waterPowerFountainSprite.destroy()
+
         prepareRandomIngredients()
 
         tiles.placeOnTile(playerSprite, tiles.getTileLocation(3, 2))
@@ -605,8 +607,9 @@ namespace dungeon {
         statusBarSprite.attachToSprite(playerSprite)
     }
 
+    let waterPowerFountainSprite :Sprite = null
     function prepareWaterFountain() {
-        let waterPowerFountainSprite = sprites.create(img`
+        waterPowerFountainSprite = sprites.create(img`
             d 1 1 1 1 1 1 1 1 1 1 1 1 1 1 b
             1 d d d 8 8 8 8 8 8 8 8 d d d b
             1 d d 8 8 9 9 9 9 9 9 8 8 d d b
