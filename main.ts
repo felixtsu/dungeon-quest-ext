@@ -38,7 +38,8 @@ namespace dungeon {
             // playerSprite.say("饱餐一顿的勇者第二天就找到了出路", 2000)
             playerSprite.say("Nice meal, I can see a way out.", 2000)
             pause(2000)
-            game.over(true)
+            prepareLevel4()
+            // game.over(true)
         }
     }
 
@@ -409,8 +410,7 @@ namespace dungeon {
         sprites.onOverlap(SpriteKind.Player, SPRITE_KIND_PORTAL, (sprite, otherSprite) => {
             tiles.placeOnTile(sprite, tiles.getTileLocation(7, 8))
             otherSprite.destroy()
-            // prepareLevel2()
-            prepareLevel4()
+            prepareLevel2()
         })
     }
 
