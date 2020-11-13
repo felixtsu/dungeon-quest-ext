@@ -24,19 +24,19 @@ namespace dungeon {
     //%group="Skill"
     export function cook(recipe: Recipe) {
         if (!playerSprite.tileKindAt(TileDirection.Center, myTiles.tile2)) {
-            // playerSprite.say('我要在火堆上才能做饭', 1000)
-            playerSprite.say('I can only cook at campfire.', 1000)
+            playerSprite.say('我要在火堆上才能做饭', 1000)
+            // playerSprite.say('I can only cook at campfire.', 1000)
             return
         }
 
         if (ingredientsAcquired != 2 || recipe != correctRecipe) {
-            // playerSprite.say("你身上的原料做不出来这个菜，你饿死了", 1000)
-            playerSprite.say("I don't have ingredient for that, I'm starving.", 1000)
+            playerSprite.say("你身上的原料做不出来这个菜，你饿死了", 1000)
+            // playerSprite.say("I don't have ingredient for that, I'm starving.", 1000)
             pause(1000)
             game.over()
         } else {
-            // playerSprite.say("饱餐一顿的勇者第二天就找到了出路", 2000)
-            playerSprite.say("Nice meal, I can see a way out.", 2000)
+            playerSprite.say("饱餐一顿的勇者第二天就找到了出路", 2000)
+            // playerSprite.say("Nice meal, I can see a way out.", 2000)
             pause(2000)
             prepareLevel4()
             // game.over(true)
@@ -54,14 +54,15 @@ namespace dungeon {
         if (controller.up.isPressed() || controller.down.isPressed() || 
             controller.right.isPressed() || controller.left.isPressed() || 
             moving) {
-            // playerSprite.say("我要站着不动才能发射水球", 500)
-            playerSprite.say("I can't throw a water ball while moving", 500)
+            playerSprite.say("我要站着不动才能发射水球", 500)
+            // playerSprite.say("I can't throw a water ball while moving", 500)
             return
         }
         let powerBarSprite = statusbars.getStatusBarAttachedTo(StatusBarKind.Energy, playerSprite)
 
         if (powerBarSprite === undefined || powerBarSprite.value != powerBarSprite.max) {
-            playerSprite.say("Not enough energy.", 1000)
+            playerSprite.say("能量不足", 1000)
+            // playerSprite.say("Not enough energy.", 1000)
             return;
         }
 
@@ -202,7 +203,8 @@ namespace dungeon {
         preparePlayer()
         prepareTrap()
 
-        game.splash("Use your coding skill to explore the dungeon, find a way out.")
+        // game.splash("Use your coding skill to explore the dungeon, find a way out.")
+        game.splash("运用你的编程技巧去探索地牢，找到出路。")
     }
 
     let keyDropped = false;
@@ -256,8 +258,8 @@ namespace dungeon {
         tiles.placeOnTile(trapSprite, tiles.getTileLocation(13, 11))
 
         sprites.onOverlap(SpriteKind.Player, SPRITE_KIND_TRAP, function (sprite: Sprite, otherSprite: Sprite) {
-            // game.splash("你作弊破门被发现，即死")
-            game.splash("You cheat breaking the door, the dungeon master cast instant death on you.")
+            game.splash("你作弊破门被发现，即死")
+            // game.splash("You cheat breaking the door, the dungeon master cast instant death on you.")
             game.over()
         })
     }
@@ -371,14 +373,14 @@ namespace dungeon {
     //%group="Skill"
     export function openDoor() {
         if (!playerSprite.overlapsWith(doorSprite)) {
-            playerSprite.say("There's no door around.")
-            // playerSprite.say("我要走到门旁边才能开门")
+            // playerSprite.say("There's no door around.")
+            playerSprite.say("我要走到门旁边才能开门")
             return;
         }
 
         if (sprites.allOfKind(SpriteKind.Key).length != 0 || !keyDropped) {
-            game.splash("Pushing the door by brutal force, it collapsed and killed you. ")
-            // game.splash("想要暴力推门，结果被门砸死了")
+            // game.splash("Pushing the door by brutal force, it collapsed and killed you. ")
+            game.splash("想要暴力推门，结果被门砸死了")
             game.over()
         }
 
@@ -523,8 +525,8 @@ namespace dungeon {
     //%group="Skill"
     export function openChest() {
         if (!playerSprite.tileKindAt(TileDirection.Center, sprites.dungeon.chestClosed)) {
-            playerSprite.say("There's no chest nearby.", 1000)
-            // playerSprite.say('我要在宝箱附近才能开箱', 1000)
+            // playerSprite.say("There's no chest nearby.", 1000)
+            playerSprite.say('我要在宝箱附近才能开箱', 1000)
             return
         }
 
@@ -550,8 +552,8 @@ namespace dungeon {
         prepareRandomIngredients()
 
         tiles.placeOnTile(playerSprite, tiles.getTileLocation(3, 2))
-        playerSprite.say("There's campfire for cooking, let me find some ingredients.", 2000)
-        // playerSprite.say('这里有火堆，可以做饭, 找找看附近有没有材料', 2000)
+        // playerSprite.say("There's campfire for cooking, let me find some ingredients.", 2000)
+        playerSprite.say('这里有火堆，可以做饭, 找找看附近有没有材料', 2000)
 
     }
 
