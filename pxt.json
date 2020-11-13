@@ -1,6 +1,6 @@
 {
     "name": "dungeon-quest-ext",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "description": "a simple dungeon quert extension",
     "dependencies": {
         "device": "*",
