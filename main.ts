@@ -751,7 +751,7 @@ namespace dungeon {
         tiles.placeOnTile(level4RightDoorSprite, tiles.getTileLocation(8, 12))
 
         sprites.onOverlap(SpriteKind.Player, SPRITE_KIND_RAT_ROOM_DOOR, function(sprite: Sprite, otherSprite: Sprite) {
-            if (!ratNumberAnswer) {
+            if (ratNumberAnswer == NaN) {
                 game.splash("Give your answer to the goddess,")
                 game.splash("Before you can face the challenge,")
                 game.splash("The correct answer give you nothing,")
